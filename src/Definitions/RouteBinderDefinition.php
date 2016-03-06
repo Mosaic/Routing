@@ -1,6 +1,6 @@
 <?php
 
-namespace Mosaic\Definitions;
+namespace Mosaic\Routing\Definitions;
 
 use Interop\Container\Definition\DefinitionProviderInterface;
 use Mosaic\Routing\Loaders\LoadRoutesFromBinders;
