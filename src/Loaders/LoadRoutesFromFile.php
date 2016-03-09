@@ -2,7 +2,6 @@
 
 namespace Mosaic\Routing\Loaders;
 
-use FastRoute\Route;
 use InvalidArgumentException;
 use Mosaic\Routing\RouteLoader;
 use Mosaic\Routing\Router;

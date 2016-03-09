@@ -3,6 +3,8 @@
 namespace Mosaic\Routing;
 
 use Mosaic\Common\Components\AbstractComponent;
+use Mosaic\Routing\Loaders\LoadRoutesFromBinders;
+use Mosaic\Routing\Loaders\LoadRoutesFromFile;
 use Mosaic\Routing\Providers\FastRouteProvider;
 
 /**
@@ -19,7 +21,7 @@ final class Component extends AbstractComponent
      * @param string      $implementation
      * @param RouteLoader $loader
      */
-    protected function __construct(string $implementation, RouteLoader $loader)
+    protected function __construct(string $implementation, RouteLoader $loader = null)
     {
         $this->loader = $loader;
         parent::__construct($implementation);
@@ -33,6 +35,28 @@ final class Component extends AbstractComponent
         return [
             new FastRouteProvider($this->loader)
         ];
+    }
+
+    /**
+     * @param \string[] ...$paths
+     * @return $this
+     */
+    public function from(string ...$paths)
+    {
+        $this->loader = new LoadRoutesFromFile(...$paths);
+
+        return $this;
+    }
+
+    /**
+     * @param RouteBinder[] ...$binders
+     * @return $this
+     */
+    public function bind(RouteBinder ...$binders)
+    {
+        $this->loader = new LoadRoutesFromBinders(...$binders);
+
+        return $this;
     }
 
     /**
