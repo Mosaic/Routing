@@ -7,7 +7,7 @@ interface RouteLoader
     /**
      * @param Router $router
      *
-     * @return mixed
+     * @return Router
      */
-    public function loadRoutes(Router $router);
+    public function loadRoutes(Router $router) : Router;
 }

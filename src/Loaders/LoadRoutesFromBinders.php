@@ -2,59 +2,36 @@
 
 namespace Mosaic\Routing\Loaders;
 
-use InvalidArgumentException;
-use Mosaic\Application;
-use Mosaic\Config\Config;
-use Mosaic\Container\Container;
+use Mosaic\Routing\RouteBinder;
 use Mosaic\Routing\RouteLoader;
 use Mosaic\Routing\Router;
 
 class LoadRoutesFromBinders implements RouteLoader
 {
     /**
-     * @var Application
+     * @var \Mosaic\Routing\RouteBinder[]
      */
-    private $app;
+    private $binders;
 
     /**
-     * @var Config
+     * @param \Mosaic\Routing\RouteBinder[] ...$binders
      */
-    private $config;
-
-    /**
-     * @var Container
-     */
-    private $container;
-
-    /**
-     * LoadRoutesFromBinders constructor.
-     *
-     * @param Application $app
-     * @param Container   $container
-     * @param Config      $config
-     */
-    public function __construct(Application $app, Container $container, Config $config)
+    public function __construct(RouteBinder ...$binders)
     {
-        $this->app       = $app;
-        $this->config    = $config;
-        $this->container = $container;
+        $this->binders = $binders;
     }
 
     /**
      * @param Router $router
      *
-     * @return mixed
+     * @return Router
      */
-    public function loadRoutes(Router $router)
+    public function loadRoutes(Router $router) : Router
     {
-        $binders = $this->config->get($this->app->getContext() . '.routes', []);
-
-        foreach ($binders as $binder) {
-            if (!class_exists($binder)) {
-                throw new InvalidArgumentException('RouteBinder [' . $binder . '] does not exist');
-            }
-
-            $this->container->make($binder)->bind($router);
+        foreach ($this->binders as $binder) {
+            $binder->bind($router);
         }
+
+        return $router;
     }
 }

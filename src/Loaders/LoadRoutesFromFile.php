@@ -2,18 +2,41 @@
 
 namespace Mosaic\Routing\Loaders;
 
+use FastRoute\Route;
+use InvalidArgumentException;
 use Mosaic\Routing\RouteLoader;
 use Mosaic\Routing\Router;
 
 class LoadRoutesFromFile implements RouteLoader
 {
     /**
+     * @var string[]
+     */
+    private $paths;
+
+    /**
+     * @param string[] ...$paths
+     */
+    public function __construct(string ...$paths)
+    {
+        $this->paths = $paths;
+    }
+
+    /**
      * @param Router $router
      *
-     * @return mixed
+     * @return Router
      */
-    public function loadRoutes(Router $router)
+    public function loadRoutes(Router $router) : Router
     {
-        // TODO: Implement loadRoutes() method.
+        foreach ($this->paths as $path) {
+            if (!file_exists($path)) {
+                throw new InvalidArgumentException('Route file does not exist at [' . $path . ']');
+            }
+
+            include_once $path;
+        }
+
+        return $router;
     }
 }
