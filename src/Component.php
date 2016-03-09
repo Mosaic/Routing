@@ -3,6 +3,7 @@
 namespace Mosaic\Routing;
 
 use Mosaic\Common\Components\AbstractComponent;
+use Mosaic\Routing\Loaders\LoaderChain;
 use Mosaic\Routing\Loaders\LoadRoutesFromBinders;
 use Mosaic\Routing\Loaders\LoadRoutesFromFile;
 use Mosaic\Routing\Providers\FastRouteProvider;
@@ -13,7 +14,7 @@ use Mosaic\Routing\Providers\FastRouteProvider;
 final class Component extends AbstractComponent
 {
     /**
-     * @var RouteLoader
+     * @var LoaderChain
      */
     private $loader;
 
@@ -23,7 +24,7 @@ final class Component extends AbstractComponent
      */
     protected function __construct(string $implementation, RouteLoader $loader = null)
     {
-        $this->loader = $loader;
+        $this->loader = new LoaderChain($loader ?: []);
         parent::__construct($implementation);
     }
 
@@ -41,9 +42,11 @@ final class Component extends AbstractComponent
      * @param \string[] ...$paths
      * @return $this
      */
-    public function from(string ...$paths)
+    public function files(string ...$paths)
     {
-        $this->loader = new LoadRoutesFromFile(...$paths);
+        $this->loader->add(
+            new LoadRoutesFromFile(...$paths)
+        );
 
         return $this;
     }
@@ -52,9 +55,11 @@ final class Component extends AbstractComponent
      * @param RouteBinder[] ...$binders
      * @return $this
      */
-    public function bind(RouteBinder ...$binders)
+    public function binders(RouteBinder ...$binders)
     {
-        $this->loader = new LoadRoutesFromBinders(...$binders);
+        $this->loader->add(
+            new LoadRoutesFromBinders(...$binders)
+        );
 
         return $this;
     }
