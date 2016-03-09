@@ -3,7 +3,7 @@
 namespace Mosaic\Routing;
 
 use Mosaic\Common\Components\AbstractComponent;
-use Mosaic\Routing\Definitions\FastRouteDefinition;
+use Mosaic\Routing\Providers\FastRouteProvider;
 
 /**
  * @method static $this fastRoute()
@@ -16,7 +16,7 @@ final class Component extends AbstractComponent
     public function resolveFastRoute()
     {
         return [
-            new FastRouteDefinition()
+            new FastRouteProvider()
         ];
     }
 

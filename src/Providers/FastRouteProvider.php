@@ -1,6 +1,6 @@
 <?php
 
-namespace Mosaic\Routing\Definitions;
+namespace Mosaic\Routing\Providers;
 
 use Interop\Container\Definition\DefinitionProviderInterface;
 use Mosaic\Routing\Adapters\FastRoute\RouteDispatcher;
@@ -8,7 +8,7 @@ use Mosaic\Routing\Adapters\Router;
 use Mosaic\Routing\RouteDispatcher as RouteDispatcherInterface;
 use Mosaic\Routing\Router as RouterInterface;
 
-class FastRouteDefinition implements DefinitionProviderInterface
+class FastRouteProvider implements DefinitionProviderInterface
 {
     /**
      * @return array|Definition[]

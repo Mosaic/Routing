@@ -2,6 +2,7 @@
 
 namespace Mosaic\Routing\Adapters;
 
+use Mosaic\Routing\Route;
 use Mosaic\Routing\RouteCollection;
 use Mosaic\Routing\Router as RouterContract;
 

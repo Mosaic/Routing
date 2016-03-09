@@ -1,12 +1,12 @@
 <?php
 
-namespace Mosaic\Definitions;
+namespace Mosaic\Routing\Providers;
 
 use Interop\Container\Definition\DefinitionProviderInterface;
 use Mosaic\Routing\Loaders\LoadRoutesFromFile;
 use Mosaic\Routing\RouteLoader;
 
-class RouteFileDefinition implements DefinitionProviderInterface
+class RouteFileProvider implements DefinitionProviderInterface
 {
     /**
      * Returns the definition to register in the container.
