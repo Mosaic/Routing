@@ -2,17 +2,17 @@
 
 namespace Mosaic\Routing;
 
-use Mosaic\Http\Request;
+use Psr\Http\Message\ServerRequestInterface;
 
 interface RouteDispatcher
 {
     /**
      * Dispatch the request
      *
-     * @param Request         $request
-     * @param RouteCollection $collection
+     * @param ServerRequestInterface $request
+     * @param RouteCollection        $collection
      *
      * @return mixed
      */
-    public function dispatch(Request $request, RouteCollection $collection);
+    public function dispatch(ServerRequestInterface $request, RouteCollection $collection);
 }

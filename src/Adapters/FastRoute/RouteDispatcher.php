@@ -10,23 +10,24 @@ use Mosaic\Http\Request;
 use Mosaic\Routing\Route;
 use Mosaic\Routing\RouteCollection;
 use Mosaic\Routing\RouteDispatcher as RouteDispatcherContract;
+use Psr\Http\Message\ServerRequestInterface;
 
 class RouteDispatcher implements RouteDispatcherContract
 {
     /**
      * Dispatch the request
      *
-     * @param Request         $request
-     * @param RouteCollection $collection
+     * @param ServerRequestInterface $request
+     * @param RouteCollection        $collection
      *
      * @throws MethodNotAllowedException
      * @throws NotFoundHttpException
      * @return Route
      */
-    public function dispatch(Request $request, RouteCollection $collection)
+    public function dispatch(ServerRequestInterface $request, RouteCollection $collection)
     {
-        $method = $request->method();
-        $uri    = $request->path();
+        $method = $request->getMethod();
+        $uri    = $request->getUri()->getPath();
 
         $routeInfo = $this->createDispatcher($collection)->dispatch($method, $uri);
 
