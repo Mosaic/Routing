@@ -35,7 +35,7 @@ class Route
     /**
      * Create a new Route instance.
      *
-     * @param array         $methods
+     * @param string|array  $methods
      * @param string        $uri
      * @param Closure|array $action
      *
@@ -44,7 +44,7 @@ class Route
     public function __construct($methods, $uri, $action)
     {
         $this->setUri($uri);
-        $this->methods         = (array)$methods;
+        $this->methods = (array) $methods;
 
         $this->action = $this->parseAction($action);
 

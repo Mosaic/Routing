@@ -14,7 +14,7 @@ class LoadRoutesFromFile implements RouteLoader
     private $paths;
 
     /**
-     * @param string[] ...$paths
+     * @param string[] $paths
      */
     public function __construct(string ...$paths)
     {

@@ -14,7 +14,7 @@ class LoadRoutesFromBinders implements RouteLoader
     private $binders;
 
     /**
-     * @param \Mosaic\Routing\RouteBinder[] ...$binders
+     * @param \Mosaic\Routing\RouteBinder[] $binders
      */
     public function __construct(RouteBinder ...$binders)
     {

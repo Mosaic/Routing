@@ -3,6 +3,7 @@
 namespace Mosaic\Routing\Providers;
 
 use Interop\Container\Definition\DefinitionProviderInterface;
+use Mosaic\Container\Container;
 use Mosaic\Routing\Adapters\FastRoute\RouteDispatcher;
 use Mosaic\Routing\Adapters\Router;
 use Mosaic\Routing\Dispatchers\DispatchClosure;
@@ -34,7 +35,7 @@ class FastRouteProvider implements DefinitionProviderInterface
     public function getDefinitions() : array
     {
         return [
-            RouteDispatcherInterface::class => function ($container) {
+            RouteDispatcherInterface::class => function (Container $container) {
 
                 $method = new MethodParameterResolver($container);
 

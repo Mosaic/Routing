@@ -58,11 +58,11 @@ class RouteDispatcher implements RouteDispatcherInterface
             case Dispatcher::FOUND:
                 $route = $routeInfo[1];
                 $route->bind($routeInfo[2]);
-        }
 
-        return $this->dispatcher->dispatch($route, function ($response) {
-            return $response;
-        });
+                return $this->dispatcher->dispatch($route, function ($response) {
+                    return $response;
+                });
+        }
     }
 
     /**
