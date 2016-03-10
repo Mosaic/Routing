@@ -50,7 +50,7 @@ class DispatchClosure implements Dispatcher
      *
      * @return bool
      */
-    public function isSatisfiedBy(Route $route)
+    private function isSatisfiedBy(Route $route)
     {
         $action = $route->action();
 

@@ -2,7 +2,7 @@
 
 namespace Mosaic\Routing\Tests;
 
-use Mosaic\Contracts\Container\Container;
+use Mosaic\Container\Container;
 use Mosaic\Routing\MethodParameterResolver;
 
 class MethodParameterResolverTest extends \PHPUnit_Framework_TestCase

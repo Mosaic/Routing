@@ -26,8 +26,12 @@ class DispatcherChain implements Dispatcher
      */
     public function dispatch(Route $route, callable $next)
     {
-        return array_reduce($this->dispatchers, function ($key, $dispatcher) use ($route, $next) {
-            return $dispatcher->dispatch($route, $next);
-        });
+        foreach ($this->dispatchers as $dispatcher) {
+            $response = $dispatcher->dispatch($route, $next);
+
+            if (!$response instanceof Route) {
+                return $response;
+            }
+        }
     }
 }

@@ -28,19 +28,7 @@ class DispatchClosureTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function test_can_check_if_action_needs_to_be_dispatched_as_closure()
-    {
-        $this->assertTrue(
-            $this->dispatcher->isSatisfiedBy(new Route(['GET'], '/', function () {
-            }))
-        );
-
-        $this->assertFalse(
-            $this->dispatcher->isSatisfiedBy(new Route(['GET'], '/', 'Controller@index'))
-        );
-    }
-
-    public function test_can_dispatch_controller()
+    public function test_can_dispatch_closure()
     {
         $route = new Route(['GET'], '/', [
             'uses' => function () {
@@ -48,9 +36,23 @@ class DispatchClosureTest extends \PHPUnit_Framework_TestCase
             }
         ]);
 
-        $response = $this->dispatcher->dispatch($route);
+        $response = $this->dispatcher->dispatch($route, function () {
+        });
 
         $this->assertEquals('response', $response);
+    }
+
+    public function test_will_skip_when_not_closure()
+    {
+        $route = new Route(['GET'], '/', [
+            'uses' => 'Controller@method'
+        ]);
+
+        $response = $this->dispatcher->dispatch($route, function () {
+            return 'skippedClosure-wentToNext';
+        });
+
+        $this->assertEquals('skippedClosure-wentToNext', $response);
     }
 
     public function tearDown()

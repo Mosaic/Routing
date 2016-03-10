@@ -1,17 +1,23 @@
 <?php
 
-namespace Mosaic\Tests\Definitions;
+namespace Mosaic\Tests\Providers;
 
 use Interop\Container\Definition\DefinitionProviderInterface;
-use Mosaic\Definitions\FastRouteDefinition;
+use Mosaic\Routing\Loaders\LoadRoutesFromBinders;
+use Mosaic\Routing\Providers\FastRouteProvider;
 use Mosaic\Routing\RouteDispatcher;
 use Mosaic\Routing\Router;
+use Mosaic\Routing\Tests\fixtures\routes\StubRouteBinder;
 
-class FastRouteDefinitionTest extends \PHPUnit_Framework_TestCase
+class FastRouteProviderTest extends \PHPUnit_Framework_TestCase
 {
     public function getDefinition() : DefinitionProviderInterface
     {
-        return new FastRouteDefinition();
+        return new FastRouteProvider(
+            new LoadRoutesFromBinders(
+                new StubRouteBinder
+            )
+        );
     }
 
     public function shouldDefine() : array

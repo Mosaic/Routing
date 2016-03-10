@@ -1,9 +1,9 @@
 <?php
 
-namespace Mosaic\Tests\fixtures\routes;
+namespace Mosaic\Routing\Tests\fixtures\routes;
 
-use Mosaic\Contracts\Routing\RouteBinder;
-use Mosaic\Contracts\Routing\Router;
+use Mosaic\Routing\RouteBinder;
+use Mosaic\Routing\Router;
 
 class StubRouteBinder implements RouteBinder
 {

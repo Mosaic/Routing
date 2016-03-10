@@ -24,7 +24,7 @@ final class Component extends AbstractComponent
      */
     protected function __construct(string $implementation, RouteLoader $loader = null)
     {
-        $this->loader = new LoaderChain($loader ?: []);
+        $this->loader = new LoaderChain($loader ? [$loader] : []);
         parent::__construct($implementation);
     }
 
