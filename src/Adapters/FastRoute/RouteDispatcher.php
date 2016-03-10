@@ -4,8 +4,8 @@ namespace Mosaic\Routing\Adapters\FastRoute;
 
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
-use Mosaic\Http\Exceptions\MethodNotAllowedException;
-use Mosaic\Http\Exceptions\NotFoundHttpException;
+use Mosaic\Routing\Exceptions\MethodNotAllowedException;
+use Mosaic\Routing\Exceptions\NotFoundHttpException;
 use Mosaic\Routing\Dispatchers\Dispatcher as DispatcherInterface;
 use Mosaic\Routing\RouteCollection;
 use Mosaic\Routing\RouteDispatcher as RouteDispatcherInterface;

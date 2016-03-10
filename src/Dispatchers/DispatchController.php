@@ -3,7 +3,7 @@
 namespace Mosaic\Routing\Dispatchers;
 
 use Mosaic\Container\Container;
-use Mosaic\Http\Exceptions\NotFoundHttpException;
+use Mosaic\Routing\Exceptions\NotFoundHttpException;
 use Mosaic\Routing\MethodParameterResolver;
 use Mosaic\Routing\Route;
 use ReflectionMethod;
