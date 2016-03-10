@@ -6,7 +6,7 @@ use Mosaic\Routing\MethodParameterResolver;
 use Mosaic\Routing\Route;
 use ReflectionFunction;
 
-class DispatchClosure
+class DispatchClosure implements Dispatcher
 {
     /**
      * @var MethodParameterResolver
@@ -24,12 +24,16 @@ class DispatchClosure
     /**
      * Dispatch the request
      *
-     * @param Route $route
-     *
+     * @param  Route    $route
+     * @param  callable $next
      * @return mixed
      */
-    public function dispatch(Route $route)
+    public function dispatch(Route $route, callable $next)
     {
+        if (!$this->isSatisfiedBy($route)) {
+            return $next($route);
+        }
+
         $action   = $route->action();
         $callback = $action['uses'];
 

@@ -8,7 +8,7 @@ use Mosaic\Routing\MethodParameterResolver;
 use Mosaic\Routing\Route;
 use ReflectionMethod;
 
-class DispatchController
+class DispatchController implements Dispatcher
 {
     /**
      * @var Container
@@ -33,12 +33,12 @@ class DispatchController
     /**
      * Dispatch the request
      *
-     * @param Route $route
-     *
+     * @param  Route                 $route
+     * @param  callable              $next
      * @throws NotFoundHttpException
      * @return mixed
      */
-    public function dispatch(Route $route)
+    public function dispatch(Route $route, callable $next)
     {
         $action = $route->action();
 

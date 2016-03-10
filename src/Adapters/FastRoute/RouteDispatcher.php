@@ -6,30 +6,47 @@ use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
 use Mosaic\Http\Exceptions\MethodNotAllowedException;
 use Mosaic\Http\Exceptions\NotFoundHttpException;
-use Mosaic\Http\Request;
-use Mosaic\Routing\Route;
+use Mosaic\Routing\Dispatchers\Dispatcher as DispatcherInterface;
 use Mosaic\Routing\RouteCollection;
-use Mosaic\Routing\RouteDispatcher as RouteDispatcherContract;
+use Mosaic\Routing\RouteDispatcher as RouteDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class RouteDispatcher implements RouteDispatcherContract
+class RouteDispatcher implements RouteDispatcherInterface
 {
+    /**
+     * @var RouteCollection
+     */
+    private $collection;
+
+    /**
+     * @var DispatcherInterface
+     */
+    private $dispatcher;
+
+    /**
+     * @param DispatcherInterface $dispatcher
+     * @param RouteCollection     $collection
+     */
+    public function __construct(DispatcherInterface $dispatcher, RouteCollection $collection)
+    {
+        $this->collection = $collection;
+        $this->dispatcher = $dispatcher;
+    }
+
     /**
      * Dispatch the request
      *
-     * @param ServerRequestInterface $request
-     * @param RouteCollection        $collection
-     *
+     * @param  ServerRequestInterface    $request
      * @throws MethodNotAllowedException
      * @throws NotFoundHttpException
-     * @return Route
+     * @return mixed
      */
-    public function dispatch(ServerRequestInterface $request, RouteCollection $collection)
+    public function dispatch(ServerRequestInterface $request)
     {
         $method = $request->getMethod();
         $uri    = $request->getUri()->getPath();
 
-        $routeInfo = $this->createDispatcher($collection)->dispatch($method, $uri);
+        $routeInfo = $this->createDispatcher()->dispatch($method, $uri);
 
         switch ($routeInfo[0]) {
             case Dispatcher::NOT_FOUND:
@@ -43,18 +60,18 @@ class RouteDispatcher implements RouteDispatcherContract
                 $route->bind($routeInfo[2]);
         }
 
-        return $route;
+        return $this->dispatcher->dispatch($route, function () use ($route) {
+            return $route;
+        });
     }
 
     /**
-     * @param RouteCollection $collection
-     *
      * @return Dispatcher
      */
-    private function createDispatcher(RouteCollection $collection)
+    private function createDispatcher()
     {
-        return \FastRoute\simpleDispatcher(function (RouteCollector $collector) use ($collection) {
-            foreach ($collection as $route) {
+        return \FastRoute\simpleDispatcher(function (RouteCollector $collector) {
+            foreach ($this->collection as $route) {
                 $collector->addRoute($route->methods(), $route->uri(), $route);
             }
         });

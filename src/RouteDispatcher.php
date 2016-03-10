@@ -7,12 +7,8 @@ use Psr\Http\Message\ServerRequestInterface;
 interface RouteDispatcher
 {
     /**
-     * Dispatch the request
-     *
-     * @param ServerRequestInterface $request
-     * @param RouteCollection        $collection
-     *
+     * @param  ServerRequestInterface $request
      * @return mixed
      */
-    public function dispatch(ServerRequestInterface $request, RouteCollection $collection);
+    public function dispatch(ServerRequestInterface $request);
 }
