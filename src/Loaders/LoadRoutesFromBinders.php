@@ -9,12 +9,12 @@ use Mosaic\Routing\Router;
 class LoadRoutesFromBinders implements RouteLoader
 {
     /**
-     * @var \Mosaic\Routing\RouteBinder[]
+     * @var RouteBinder[]
      */
     private $binders;
 
     /**
-     * @param \Mosaic\Routing\RouteBinder[] $binders
+     * @param RouteBinder ...$binders
      */
     public function __construct(RouteBinder ...$binders)
     {

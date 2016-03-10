@@ -49,20 +49,21 @@ class RouteDispatcher implements RouteDispatcherInterface
         $routeInfo = $this->createDispatcher()->dispatch($method, $uri);
 
         switch ($routeInfo[0]) {
-            case Dispatcher::NOT_FOUND:
-                throw new NotFoundHttpException;
-
             case Dispatcher::METHOD_NOT_ALLOWED:
                 throw new MethodNotAllowedException($routeInfo[1]);
 
             case Dispatcher::FOUND:
                 $route = $routeInfo[1];
                 $route->bind($routeInfo[2]);
+                break;
 
-                return $this->dispatcher->dispatch($route, function ($response) {
-                    return $response;
-                });
+            default:
+                throw new NotFoundHttpException;
         }
+
+        return $this->dispatcher->dispatch($route, function ($response) {
+            return $response;
+        });
     }
 
     /**
