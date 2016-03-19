@@ -9,7 +9,7 @@ use Mosaic\Routing\Loaders\LoadRoutesFromFile;
 use Mosaic\Routing\Providers\FastRouteProvider;
 
 /**
- * @method static $this fastRoute(RouteLoader $loader)
+ * @method static $this fastRoute(RouteLoader $loader = null)
  */
 final class Component extends AbstractComponent
 {
