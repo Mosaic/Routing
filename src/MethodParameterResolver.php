@@ -2,24 +2,23 @@
 
 namespace Mosaic\Routing;
 
-use Mosaic\Container\Container;
 use ReflectionFunctionAbstract;
 
 class MethodParameterResolver
 {
     /**
-     * @var Container
+     * @var callable
      */
-    private $container;
+    private $resolver;
 
     /**
-     * MethodParameterResolver constructor.
-     *
-     * @param Container $container
+     * @param callable|null $resolver
      */
-    public function __construct(Container $container)
+    public function __construct(callable $resolver = null)
     {
-        $this->container = $container;
+        $this->resolver = $resolver ?: function ($class) {
+            return new $class;
+        };
     }
 
     /**
@@ -35,7 +34,8 @@ class MethodParameterResolver
         $resolved = [];
         foreach ($reflected as $param) {
             if ($class = $param->getClass()) {
-                $resolved[$param->name] = $this->container->make($class->name);
+                $resolver               = $this->resolver;
+                $resolved[$param->name] = $resolver($class->name);
             } elseif (isset($parameters[$param->name])) {
                 $resolved[$param->name] = $parameters[$param->name];
             }

@@ -2,7 +2,6 @@
 
 namespace Mosaic\Routing\Dispatchers;
 
-use Mosaic\Container\Container;
 use Mosaic\Routing\Exceptions\NotFoundHttpException;
 use Mosaic\Routing\MethodParameterResolver;
 use Mosaic\Routing\Route;
@@ -11,23 +10,29 @@ use ReflectionMethod;
 class DispatchController implements Dispatcher
 {
     /**
-     * @var Container
+     * @var MethodParameterResolver
      */
-    private $container;
+    private $method;
 
     /**
-     * @var MethodParameterResolver
+     * @var callable
      */
     private $resolver;
 
     /**
-     * @param Container               $container
-     * @param MethodParameterResolver $resolver
+     * @param MethodParameterResolver $method
+     * @param callable                $resolver
      */
-    public function __construct(Container $container, MethodParameterResolver $resolver)
+    public function __construct(MethodParameterResolver $method, callable $resolver = null)
     {
-        $this->container = $container;
-        $this->resolver  = $resolver;
+        $this->method  = $method;
+        $this->resolver = $resolver ?: function($class, $method = null, array $parameters = []) {
+            if(is_null($method)) {
+                return new $class;
+            }
+
+            return call_user_func_array([$class, $method], $parameters);
+        };
     }
 
     /**
@@ -44,15 +49,17 @@ class DispatchController implements Dispatcher
 
         list($class, $method) = explode('@', $action['uses']);
 
-        if (!method_exists($instance = $this->container->make($class), $method)) {
+        $resolver = $this->resolver;
+
+        if (!method_exists($instance = $resolver($class), $method)) {
             throw new NotFoundHttpException;
         }
 
-        $parameters = $this->resolver->resolve(
+        $parameters = $this->method->resolve(
             new ReflectionMethod($instance, $method),
             $route->parameters()
         );
 
-        return $this->container->call([$instance, $method], $parameters);
+        return $resolver($instance, $method, $parameters);
     }
 }

@@ -37,12 +37,21 @@ class FastRouteProvider implements DefinitionProviderInterface
         return [
             RouteDispatcherInterface::class => function (Container $container) {
 
-                $method = new MethodParameterResolver($container);
+                $method = new MethodParameterResolver(function ($class) use ($container) {
+                    return $container->make($class);
+                });
 
                 return new RouteDispatcher(
                     new DispatcherChain(
                         new DispatchClosure($method),
-                        new DispatchController($container, $method)
+                        new DispatchController($method,
+                            function ($class, $method = null, array $parameters = []) use ($container) {
+                                if (is_null($method)) {
+                                    return new $class;
+                                }
+
+                                return $container->call([$class, $method], $parameters);
+                            })
                     ),
                     $container->make(RouterInterface::class)->all()
                 );

@@ -2,7 +2,6 @@
 
 namespace Mosaic\Routing\Tests\Dispatchers;
 
-use Mosaic\Container\Container;
 use Mosaic\Routing\Dispatchers\DispatchController;
 use Mosaic\Routing\Exceptions\NotFoundHttpException;
 use Mosaic\Routing\MethodParameterResolver;
@@ -11,14 +10,9 @@ use Mosaic\Routing\Route;
 class DispatchControllerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Container|\Mockery\Mock
-     */
-    private $container;
-
-    /**
      * @var MethodParameterResolver|\Mockery\Mock
      */
-    private $resolver;
+    private $method;
 
     /**
      * @var DispatchController
@@ -27,23 +21,16 @@ class DispatchControllerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->container = \Mockery::mock(Container::class);
-        $this->resolver  = \Mockery::mock(MethodParameterResolver::class);
-        $this->resolver->shouldReceive('resolve')->andReturn([]);
+        $this->method  = \Mockery::mock(MethodParameterResolver::class);
+        $this->method->shouldReceive('resolve')->andReturn([]);
 
         $this->dispatcher = new DispatchController(
-            $this->container,
-            $this->resolver
+            $this->method
         );
     }
 
     public function test_can_dispatch_controller()
     {
-        $controller = new ControllerStub;
-        $this->container->shouldReceive('make')->with('Mosaic\Routing\Tests\Dispatchers\ControllerStub')->once()->andReturn($controller);
-        $this->container->shouldReceive('call')->with([$controller, 'index'],
-            [])->once()->andReturn($controller->index());
-
         $route = new Route(['GET'], '/', ['uses' => 'Mosaic\Routing\Tests\Dispatchers\ControllerStub@index']);
 
         $response = $this->dispatcher->dispatch($route, function () {
@@ -54,9 +41,7 @@ class DispatchControllerTest extends \PHPUnit_Framework_TestCase
 
     public function test_cannot_dispatch_when_controller_does_not_exist()
     {
-        $this->expectException(\ReflectionException::class);
-
-        $this->container->shouldReceive('make')->with('ControllerNotExists')->once()->andThrow(\ReflectionException::class);
+        $this->expectException(\Error::class);
 
         $route = new Route(['GET'], '/', ['uses' => 'ControllerNotExists@index']);
 
@@ -67,9 +52,6 @@ class DispatchControllerTest extends \PHPUnit_Framework_TestCase
     public function test_cannot_dispatch_when_method_does_not_exist()
     {
         $this->expectException(NotFoundHttpException::class);
-
-        $controller = new ControllerStub;
-        $this->container->shouldReceive('make')->with('Mosaic\Routing\Tests\Dispatchers\ControllerStub')->once()->andReturn($controller);
 
         $route = new Route(['GET'], '/', ['uses' => 'Mosaic\Routing\Tests\Dispatchers\ControllerStub@nonExisting']);
 

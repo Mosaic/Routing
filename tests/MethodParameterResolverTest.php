@@ -20,7 +20,9 @@ class MethodParameterResolverTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->container = \Mockery::mock(Container::class);
-        $this->resolver  = new MethodParameterResolver($this->container);
+        $this->resolver  = new MethodParameterResolver(function($class) {
+            return $this->container->make($class);
+        });
     }
 
     public function test_can_resolve_closure_parameters_with_typehints_without_route_parameters()
